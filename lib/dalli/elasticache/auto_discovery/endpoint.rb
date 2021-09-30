@@ -15,11 +15,12 @@ module Dalli
         # Legacy command for version < 1.4.14
         OLD_CONFIG_COMMAND = "get AmazonElastiCache:cluster\r\n"
     
-        def initialize(endpoint)
+        def initialize(endpoint, force_new = false)
           ENDPOINT_REGEX.match(endpoint) do |m|
             @host = m[1]
             @port = m[2].to_i
           end
+          @force_new = force_new
         end
     
         # A cached ElastiCache::StatsResponse
@@ -49,7 +50,7 @@ module Dalli
         end
     
         def get_config_from_remote
-          if engine_version < Gem::Version.new("1.4.14")
+          if !@force_new && engine_version < Gem::Version.new("1.4.14")
             data = remote_command(OLD_CONFIG_COMMAND)
           else
             data = remote_command(CONFIG_COMMAND)

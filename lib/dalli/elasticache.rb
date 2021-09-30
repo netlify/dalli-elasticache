@@ -10,7 +10,7 @@ module Dalli
     attr_reader :endpoint, :options
     
     def initialize(config_endpoint, options={})
-      @endpoint = Dalli::Elasticache::AutoDiscovery::Endpoint.new(config_endpoint)
+      @endpoint = Dalli::Elasticache::AutoDiscovery::Endpoint.new(config_endpoint, options[:force_new])
       @options = options
     end
     
